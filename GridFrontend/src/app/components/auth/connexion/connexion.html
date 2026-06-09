@@ -1,0 +1,17 @@
+<h1 class="text-center text-3xl text-blue-100 mt-3">Inscription</h1>
+
+<div class="flex justify-center items-center min-h-2/3 mt-28">
+    <form class="w-1/2 border-2 border-(--border-grey) p-4 rounded-md bg-(--form-bg)" [formGroup]="formConnexion" (ngSubmit)="login($event)">        
+        <div class="my-2 flex flex-col gap-4">
+            <label class="text-blue-100" for="courriel">Courriel :</label>
+            <input type="email" id="courriel" formControlName="email" class="border-2 border-(--border-grey) focus:border-b-emerald-800 bg-(--input-bg) rounded-md text-white px-1" />
+        </div>
+        <div class="my-2 flex flex-col gap-4">
+            <label class="text-blue-100" for="password">Mot de passe :</label>
+            <input type="password" id="password" formControlName="password" class="border-2 border-(--border-grey) focus:border-b-emerald-800 bg-(--input-bg) rounded-md text-white px-1" />
+        </div>        
+        <div class="flex justify-center">
+            <button type="submit" class="border-2 text-white border-(--border-grey) rounded-md p-1 my-4 w-1/2 bg-(--button-bg)">Soumettre</button>
+        </div>        
+    </form>
+</div>

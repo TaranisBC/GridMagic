@@ -1,0 +1,30 @@
+<form class="border-2 border-(--border-grey) p-4 rounded-md bg-(--form-bg)" [formGroup]="formEval" (ngSubmit)="creerEval($event)">
+    <div class="flex gap-4 my-2 items-end">
+        <div class="flex flex-col gap-1 flex-1">
+            <label class="text-blue-100" for="titre">Titre</label>
+            <input type="text" id="titre" formControlName="titre" class="border-2 border-(--border-grey) rounded-md text-white px-1 bg-(--input-bg)" tabindex="1" />
+        </div>
+        <div class="flex flex-col gap-1 flex-1">
+            <label class="text-blue-100" for="ponderation">Pondération</label>
+            <input type="number" id="ponderation" formControlName="ponderation" class="border-2 border-(--border-grey) rounded-md text-white px-1 bg-(--input-bg)" tabindex="2"/>
+        </div>
+        <div class="flex flex-col gap-1 flex-1">
+            <label class="text-blue-100" for="points_total">Points</label>
+            <input type="number" id="points_total" formControlName="points_total" class="border-2 border-(--border-grey) rounded-md text-white px-1 bg-(--input-bg)" tabindex="3"/>
+        </div>
+        
+        <div class="flex flex-col flex-1 items-end">
+            <button type="submit" class="border-2 text-white border-(--border-grey) rounded-md mb-0.5 px-5 bg-(--button-bg)" tabindex="5">
+                {{evaluation() ? 'Modifier' : 'Créer'}} 
+            </button>
+        </div>
+        
+        
+    </div>     
+    <div class="my-2 flex flex-col gap-4">
+        <label class="text-blue-100" for="description">Description de l'évaluation :</label>
+        <textarea id="description" formControlName="description" class="border-2 border-(--border-grey) focus:border-b-emerald-800 rounded-md text-white px-1 bg-(--input-bg)" rows="3" tabindex="4">
+            {{formEval.value.description ?? ""}}
+        </textarea>
+    </div>              
+</form>

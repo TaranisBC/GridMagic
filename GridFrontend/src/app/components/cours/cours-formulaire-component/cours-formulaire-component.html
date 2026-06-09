@@ -1,0 +1,28 @@
+<form class="border-2 border-(--border-grey) p-4 rounded-md bg-(--form-bg)" [formGroup]="formCours" (ngSubmit)="creerCours($event)">
+    <div class="flex gap-4 my-2 items-end">
+        <div class="flex flex-col gap-1 flex-1">
+            <label class="text-blue-100" for="titre">Titre du cours</label>
+            <input type="text" id="titre" formControlName="titre" class="border-2 border-(--border-grey) rounded-md text-white px-1 bg-(--input-bg)" tabindex="1" />
+        </div>
+        <div class="flex flex-col gap-1 flex-1">
+            <label class="text-blue-100" for="code">Code</label>
+            <input type="text" id="code" formControlName="code" class="border-2 border-(--border-grey) rounded-md text-white px-1 bg-(--input-bg)" tabindex="2"/>
+        </div>
+        <div class="flex flex-col gap-1 flex-1">
+            <label class="text-blue-100" for="semestre">Semestre</label>
+            <input type="text" id="semestre" formControlName="semestre" class="border-2 border-(--border-grey) rounded-md text-white px-1 bg-(--input-bg)" tabindex="3"/>
+        </div>
+        
+        <div class="flex items-end">
+            <button type="submit" class="border-2 text-white border-(--border-grey) rounded-md mb-0.5 px-5 bg-(--button-bg)" tabindex="5">Créer</button>
+        </div>
+        
+        
+    </div>     
+    <div class="my-2 flex flex-col gap-4">
+        <label class="text-blue-100" for="description">Description du cours :</label>
+        <textarea id="description" formControlName="description" class="border-2 border-(--border-grey) focus:border-b-emerald-800 rounded-md text-white px-1 bg-(--input-bg)" rows="3" tabindex="4">
+            {{formCours.value.description ?? ""}}
+        </textarea>
+    </div>              
+</form>

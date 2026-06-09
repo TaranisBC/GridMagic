@@ -1,0 +1,27 @@
+<div class="w-2/3 mx-auto">
+    <div class="flex justify-between">
+        <h1 class="text-blue-100 m-4 text-2xl">Mes cours</h1>
+        <button class="bg-(--button-bg) p-2 border-2 border-(--border-grey) rounded-md m-4 text-blue-100" (click)="changerAffichage()">
+            {{afficherFormulaire() ? 'Annuler' : 'Nouveau cours' }} 
+        </button>    
+    </div>
+
+    @if(afficherFormulaire()) {
+        <app-cours-formulaire-component (coursCree)="refreshCours()" />        
+    }
+    
+
+    @if (listeCours.isLoading()) {
+        <app-chargement/>
+    }
+
+    @if (listeCours.error()) {
+    <p class="text-red-500">Erreur de chargement</p>
+    }
+
+    <div class="flex flex-wrap">
+    @for (cours of listeCours.value()?.data ?? []; track cours.id) {
+        <app-cours-carte (coursModif)="reloadCours()" [cours]="cours"></app-cours-carte>
+    }
+    </div>        
+</div>

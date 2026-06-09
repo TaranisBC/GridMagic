@@ -1,0 +1,20 @@
+<form class="border-2 border-(--border-grey) p-4 rounded-md bg-(--form-bg)" [formGroup]="formEtudiant" (ngSubmit)="ajouterEtudiant($event)">
+    <div class="flex gap-4 my-2 items-end">
+        <div class="flex flex-col gap-1 flex-1">
+            <label class="text-blue-100" for="no_etudiant">No étudiant</label>
+            <input type="text" id="no_etudiant" formControlName="no_etudiant" class="border-2 border-(--border-grey) rounded-md text-white px-1 bg-(--input-bg)" tabindex="1" />
+        </div>
+        <div class="flex flex-col gap-1 flex-1">
+            <label class="text-blue-100" for="prenom">Prénom</label>
+            <input type="text" id="prenom" formControlName="prenom" class="border-2 border-(--border-grey) rounded-md text-white px-1 bg-(--input-bg)" tabindex="2"/>
+        </div>
+        <div class="flex flex-col gap-1 flex-1">
+            <label class="text-blue-100" for="nom">Nom</label>
+            <input type="text" id="nom" formControlName="nom" class="border-2 border-(--border-grey) rounded-md text-white px-1 bg-(--input-bg)" tabindex="3"/>
+        </div>
+        
+        <div class="flex items-end">
+            <button type="submit" class="border-2 text-white border-(--border-grey) rounded-md mb-0.5 px-5 bg-(--button-bg)" tabindex="4">Créer</button>
+        </div>
+    </div>         
+</form>

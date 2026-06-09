@@ -1,0 +1,153 @@
+<div class="w-2/3 mx-auto mt-3">
+    @if(coursResource.isLoading()) {
+        <app-chargement/>
+    }
+
+    @if(coursResource.error()) {
+        <p class="text-red-500">Erreur de chargement</p>
+    }
+
+    @if(coursResource.value()) {        
+        <h1 class="text-blue-100 text-2xl">{{ coursResource.value()?.data?.titre }} ({{coursResource.value()?.data?.code}})</h1>
+        
+        <div class="mt-5 flex justify-around">
+            <div class="border-b-2 border-r border-blue-100 flex-1 text-center text-lg py-3" [class.bg-(--form-bg)]="etudiantsSelectionne()" (click)="tabSelect(true)">
+                <p class="text-blue-100">Étudiants ({{coursResource.value()?.data?.etudiants?.length ?? 0}})</p>
+            </div>
+            <div class="border-b-2 border-l border-blue-100 flex-1 text-center text-lg py-3" [class.bg-(--form-bg)]="!etudiantsSelectionne()" (click)="tabSelect(false)">
+                <p class="text-blue-100">Évaluations ({{coursResource.value()?.data?.evaluations?.length ?? 0}})</p>
+            </div>
+        </div>        
+        
+        @if(etudiantsSelectionne()) {
+            <div class="flex justify-end mt-3">
+                <button class="border-2 border-emerald-400 text-emerald-400 px-2 py-1 mx-1 rounded-md hover:bg-emerald-400/10 transition-colors" (click)="toggleFormEtu()">
+                    {{afficherFormulaireEtudiant() ? 'Annuler' : 'Nouvel étudiant'}}
+                </button>
+                <input type="file" accept=".csv,.txt" #inputFichier class="hidden" (change)="onFichierSelectionne($event)" />
+                <button class="border-2 border-emerald-400 text-emerald-400 px-2 py-1 mx-1 rounded-md hover:bg-emerald-400/10 transition-colors" (click)="inputFichier.click()">Importer</button>
+            </div>
+
+            @if(afficherFormulaireEtudiant()) {
+                <app-formulaire-ajout-cours [cours_id]="coursResource.value()!.data!.id" (etudiantAjoute)="refreshEtu()"/>
+            }
+            <div>
+                <table class="w-full border-collapse mt-5">
+    
+                    <!-- En-tête -->
+                    <thead>
+                    <tr class="border-b-2 border-(--border-grey)">
+                        <th class="text-left text-violet-500 text-sm font-semibold py-2 px-3">N° étudiant</th>
+                        <th class="text-left text-violet-500 text-sm font-semibold py-2 px-3">Nom</th>
+                        <th class="text-left text-violet-500 text-sm font-semibold py-2 px-3">Prénom</th>
+                        <th class="py-2 px-3"></th>
+                    </tr>
+                    </thead>
+
+                    <!-- Corps -->
+                    <tbody>
+                    @for (etudiant of coursResource.value()?.data?.etudiants; track etudiant.no_etudiant) {
+                        <tr class="border-b border-(--border-grey) hover:bg-white/5 transition-colors">
+                        <td class="text-blue-100/70 text-sm py-3 px-3 font-mono">{{ etudiant.no_etudiant }}</td>
+                        <td class="text-blue-100 text-sm py-3 px-3">{{ etudiant.nom }}</td>
+                        <td class="text-blue-100 text-sm py-3 px-3">{{ etudiant.prenom }}</td>
+                        <td class="py-3 px-3 text-right">
+                            <button class="border-2 border-red-400 text-red-400 text-sm px-2 py-1 rounded-md hover:bg-red-400/10 transition-colors" (click)="etudiantEnSupression.set(etudiant)">
+                            Retirer
+                            </button>
+                        </td>
+                        </tr>
+                    } @empty {
+                        <tr>
+                        <td colspan="4" class="text-blue-100/50 text-sm text-center py-8">
+                            Aucun étudiant inscrit dans ce cours.
+                        </td>
+                        </tr>
+                    }
+                    </tbody>
+
+                </table>
+            </div>
+
+            @if(etudiantEnSupression()) {
+                <app-modal-confirmation
+                titre="Retirer l'étudiant ?"
+                [message]="'Êtes-vous sûr de vouloir retirer l\'étudiant : ' + etudiantEnSupression()?.prenom + ' ' + etudiantEnSupression()?.nom + ' du cours ' + coursResource.value()?.data?.titre + ' ? '"
+                labelConfirmer="Retirer"
+                (confirmer)="retirerEtudiant()"
+                (annuler)="etudiantEnSupression.set(null)"
+                [danger]="true"/>
+            }
+        }
+
+        @else {
+            <div class="flex justify-end mt-3">
+                <button class="border-2 border-emerald-400 text-emerald-400 px-2 py-1 mx-1 rounded-md hover:bg-emerald-400/10 transition-colors" (click)="toggleFormEval()">
+                    {{ afficherFormulaireEvaluation() ? 'Annuler' : 'Ajouter une évaluation'}} 
+                </button>                
+            </div>
+            @if(afficherFormulaireEvaluation()) {
+                <div class="mt-3">
+                    <app-formulaire-evaluation [coursId]="coursResource.value()?.data?.id ?? 0" [evaluation]="evaluationSelectionnee()" (evalCree)="refreshEvals()"/>
+                </div>                
+            }
+            <div>
+                <table class="w-full border-collapse mt-5">
+    
+                    <!-- En-tête -->
+                    <thead>
+                    <tr class="border-b-2 border-(--border-grey)">
+                        <th class="text-left text-violet-500 text-sm font-semibold py-2 px-3">Titre</th>
+                        <th class="text-left text-violet-500 text-sm font-semibold py-2 px-3">Description</th>
+                        <th class="text-left text-violet-500 text-sm font-semibold py-2 px-3">Pondération</th>
+                        <th class="text-left text-violet-500 text-sm font-semibold py-2 px-3">Points</th>
+                        <th class="py-2 px-3"></th>
+                    </tr>
+                    </thead>
+
+                    <!-- Corps -->
+                    <tbody>
+                    @for (evaluation of coursResource.value()?.data?.evaluations; track evaluation.id) {
+                        <tr class="border-b border-(--border-grey) hover:bg-white/5 transition-colors">
+                        <td class="text-blue-100/70 text-sm py-3 px-3">{{ evaluation.titre }}</td>
+                        <td class="text-blue-100 text-sm py-3 px-3">{{ evaluation.description }}</td>
+                        <td class="text-blue-100 text-sm py-3 px-3">{{ evaluation.ponderation }}</td>
+                        <td class="text-blue-100 text-sm py-3 px-3">{{ evaluation.points_total }}</td>
+                        <td class="py-3 px-3 text-right">
+                            <div class="flex justify-end gap-2">
+                                <button class="border-2 border-blue-100 text-blue-100 text-sm px-2 py-1 rounded-md hover:bg-blue-400/20 transition-colors flex items-center justify-center" (click)="modifierEval(evaluation)">
+                                    Correction
+                                </button>
+                                <button class="border-2 border-blue-400 text-blue-400 text-sm px-2 py-1 rounded-md hover:bg-blue-400/20 transition-colors flex items-center justify-center" (click)="modifierEval(evaluation)">
+                                    <ng-icon name="heroPencilSquare" size="16"/>
+                                </button>
+                                <button class="border-2 border-red-400 text-red-400 text-sm px-2 py-1 rounded-md hover:bg-red-400/20 transition-colors flex items-center justify-center" (click)="evalEnSupression.set(evaluation)">
+                                    <ng-icon name="heroTrash" size="16"/>
+                                </button>
+                            </div>
+                        </td>
+                        </tr>
+                    } @empty {
+                        <tr>
+                        <td colspan="4" class="text-blue-100/50 text-sm text-center py-8">
+                            Aucune évaluation entrée dans ce cours
+                        </td>
+                        </tr>
+                    }
+                    </tbody>
+
+                </table>
+            </div>
+
+            @if(evalEnSupression()) {
+                <app-modal-confirmation
+                titre="Supprimer l'évaluation ?"
+                [message]="'Êtes-vous sûr de vouloir supprimer l\'évaluation : ' + evalEnSupression()?.titre + ' ? '"
+                labelConfirmer="Supprimer"
+                (confirmer)="supprimerEvaluation()"
+                (annuler)="evalEnSupression.set(null)"
+                [danger]="true"/>
+            }
+        }
+    }
+</div>
