@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal, viewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CoursDetail } from '../../../models/cours_detail';
 import { CoursService } from '../../../services/cours-service';
 import { Chargement } from "../../utils/chargement/chargement";
@@ -14,7 +14,7 @@ import { heroPencilSquare, heroTrash } from '@ng-icons/heroicons/outline';
 
 @Component({
   selector: 'app-cours-details-component',
-  imports: [Chargement, FormulaireEvaluation, ModalConfirmation, FormulaireAjoutCours, NgIcon],
+  imports: [Chargement, FormulaireEvaluation, ModalConfirmation, FormulaireAjoutCours, NgIcon, RouterLink],
   providers: [provideIcons({heroPencilSquare, heroTrash})],
   templateUrl: './cours-details-component.html',
   styleUrl: './cours-details-component.css',

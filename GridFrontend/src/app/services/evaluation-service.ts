@@ -1,8 +1,9 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, Signal } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, httpResource } from '@angular/common/http';
 import { Evaluation } from '../models/evaluation';
 import { ApiResponse } from '../models/utils/ApiResponce';
+import { EvalComplete } from '../models/eval_complete';
 
 @Injectable({
   providedIn: 'root',
@@ -21,5 +22,11 @@ export class EvaluationService {
 
   supprimerEval(id: number) {
     return this.httpClient.delete(`${this.url}/evaluation/${id}`)
+  }
+
+  evalAvecCritere(id: Signal<number | null>) {
+    return httpResource<ApiResponse<EvalComplete>>(
+      () => id() ? `${this.url}/evaluation/${id()}` : undefined
+    );
   }
 }

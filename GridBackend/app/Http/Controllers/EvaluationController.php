@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreEvaluationRequest;
 use App\Http\Requests\UpdateEvaluationRequest;
+use App\Http\Resources\EvaluationDetailResource;
 use App\Http\Resources\EvaluationResource;
 use App\Models\Cours;
 use App\Models\Evaluation;
@@ -41,7 +42,9 @@ class EvaluationController extends Controller
      */
     public function show(Evaluation $evaluation)
     {
-        //
+        return new EvaluationDetailResource(
+            $evaluation->load('criteres', 'cours.etudiants')
+        );
     }
 
     /**

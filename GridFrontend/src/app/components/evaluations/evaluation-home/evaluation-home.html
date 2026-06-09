@@ -1,0 +1,7 @@
+<p class="text-blue-100">Évaluation: {{evalResource.value()?.data?.titre}}</p>
+<p class="text-blue-100">Étudiants: {{evalResource.value()?.data?.etudiants?.length}}</p>
+<p class="text-blue-100">Critères: {{evalResource.value()?.data?.criteres?.length}}</p>
+
+@for(critere of evalResource.value()?.data?.criteres ?? []; track critere.id) {
+    <p>{{critere.titre}}</p>
+}
