@@ -27,15 +27,26 @@ export class EvaluationHome {
 
   protected critereSelectionne = signal(true)
   protected afficherFormCritere = signal(false)
-  protected etudiantSelectionne: Etudiant | null = null
+  protected etudiantSelectionne = signal<Etudiant | null>(null) 
   protected critereModif= signal<Critere|null>(null)
-  protected resultats = signal<Resultat[]>([])
+  // protected resultats = signal<Resultat[]>([])
 
   tabSelect(etuSelect: boolean) {
     this.critereSelectionne.set(etuSelect)
   }
 
   evalResource = this.evalService.evalAvecCritere(this.evaluation_id)
+
+  private evalId = computed(() => this.evaluation_id() ?? 0)
+
+  private noEtudiant = computed(() => 
+    this.etudiantSelectionne()?.no_etudiant ?? null
+  )
+
+  resultats = this.resultatService.getResultatsEtuEval(
+    this.evalId,
+    this.noEtudiant
+  )
 
   criteresTries = computed(() => 
     [...(this.evalResource.value()?.data?.criteres ?? [])]
@@ -56,7 +67,7 @@ export class EvaluationHome {
   }
 
   selectionnerEtu(etudiant: Etudiant) {
-    this.etudiantSelectionne = etudiant
+    this.etudiantSelectionne.set(etudiant)
   }
 
   afficherModifCritere(critere: Critere) {

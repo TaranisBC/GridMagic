@@ -6,6 +6,7 @@ use App\Http\Requests\StoreResultatRequest;
 use App\Http\Requests\UpdateResultatRequest;
 use App\Http\Resources\ResultatResource;
 use App\Models\Critere;
+use App\Models\Evaluation;
 use App\Models\Resultat;
 use Illuminate\Http\Request;
 use LDAP\Result;
@@ -82,13 +83,13 @@ class ResultatController extends Controller
         //
     }
 
-    public function resultatsEtuEval(Request $request) {
-        $criteres = Critere::where('evaluation_id', $request->evaluation_id)->get();
-        $resultats = [];
-        foreach ($criteres as $critere) {
-            $res = Resultat::where('critere_id', $critere->id)->where('no_etudiant', $request->no_etudiant)->get();
-            $resultats[] = $res;
-        }
+    public function resultatsEtuEval(Evaluation $evaluation, string $no_etudiant) {
+        $resultats = Resultat::whereHas('critere', function ($query) use ($evaluation) {
+            $query->where('evaluation_id', $evaluation->id);
+        })
+            ->where('no_etudiant', $no_etudiant)
+            ->get();
+
         return ResultatResource::collection($resultats);
     }
 }

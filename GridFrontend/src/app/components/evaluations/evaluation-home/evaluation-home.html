@@ -43,15 +43,15 @@
     <div class="w-4/5 mx-auto mt-3 flex">
         <div class="w-1/5 border-r-2 border-gray-800 mt-3">
             @for (etudiant of evalResource.value()?.data?.etudiants; track etudiant.no_etudiant) {
-                <div class="h-16 border-b-2 border-gray-800 flex items-center" [class.bg-(--form-bg)]="etudiantSelectionne == etudiant" (click)="selectionnerEtu(etudiant)">
+                <div class="h-16 border-b-2 border-gray-800 flex items-center" [class.bg-(--form-bg)]="etudiantSelectionne() == etudiant" (click)="selectionnerEtu(etudiant)">
                     <p class="text-blue-100 ms-2">{{etudiant.nom}}, {{etudiant.prenom}}</p>
                 </div>
             }
         </div>
         <div class="w-4/5">
             <div class="m-3">
-                @if(etudiantSelectionne){
-                    <app-correction-etudiant [etudiant]="etudiantSelectionne" [criteres]="criteresTries()" />
+                @if(etudiantSelectionne()){
+                    <app-correction-etudiant [etudiant]="etudiantSelectionne()!!" [criteres]="criteresTries()" [resultats]="resultats.value()?.data ?? []" />
                 }
             </div>
             

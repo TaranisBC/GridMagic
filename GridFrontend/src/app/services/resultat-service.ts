@@ -1,6 +1,6 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, Signal } from '@angular/core';
 import { Resultat } from '../models/resultat';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, httpResource } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { ApiResponse } from '../models/utils/ApiResponce';
 
@@ -13,8 +13,12 @@ export class ResultatService {
   private httpClient = inject(HttpClient)
 
 
-  getResultatEtuEval(no_etudiant: String, evaluation_id: number) {
-    
+  getResultatsEtuEval(evaluationId: Signal<number>, noEtudiant: Signal<string | null>) {
+    return httpResource<ApiResponse<Resultat[]>>(
+      () => noEtudiant() 
+        ? `${this.url}/evaluations/${evaluationId()}/etudiants/${noEtudiant()}/resultats`
+        : undefined
+    )
   }
 
   sauvegarder(payload: Omit<Resultat, 'id'>) {

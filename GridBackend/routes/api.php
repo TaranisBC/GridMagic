@@ -25,5 +25,5 @@ Route::post('cours/{cours}/etudiants/import', [CoursController::class, 'import']
 Route::apiResource('evaluation', EvaluationController::class);
 Route::apiResource('criteres', CritereController::class);
 Route::apiResource('resultats', ResultatController::class);
-Route::get('resultats/etudiant' , [ResultatController::class, 'resultatsEtuEval']);
+Route::get('evaluations/{evaluation}/etudiants/{no_etudiant}/resultats', [ResultatController::class, 'resultatsEtuEval']);
 

@@ -5,8 +5,11 @@
     <p class="text-blue-100 font-semibold text-lg">
       {{ etudiant().nom }}, {{ etudiant().prenom }}
     </p>
-    <span class="text-violet-500">
-      {{ totalPoints() }} / {{ pointsMax() }} pts
+    <span 
+    [class.text-emerald-400]="pourcentage() !== null && pourcentage()! >= 60"
+    [class.text-red-400]="pourcentage() !== null && pourcentage()! < 60"
+    [class.text-blue-100]="pourcentage() === null">
+      {{ totalPoints() }} / {{ pointsMax() }} pts ({{pourcentage()}}%)
     </span>
   </div>
 
@@ -16,6 +19,7 @@
       [critere]="critere"
       [etudiantId]="etudiant().no_etudiant"
       [resultat]="resultatPourCritere(critere.id)"
+      (resultatsaved)="updateResultat($event)"
     />
   }
 
