@@ -1,0 +1,43 @@
+<div class="border border-(--border-grey) rounded-lg p-4 mb-3">
+  
+  <!-- En-tête critère -->
+  <div class="flex justify-between items-center mb-3">
+    <p class="text-blue-100 font-semibold">{{ critere().titre }}</p>
+    <span class="text-violet-500 text-sm">
+      {{ niveauChoisi() !== null ? critere().niveaux[niveauChoisi()!].points : '—' }} 
+      / {{ critere().niveaux[0].points }} pts
+    </span>
+  </div>
+
+  <!-- Sélection du niveau -->
+  <div class="flex gap-2 flex-wrap mb-3">
+    @for (niveau of critere().niveaux; track $index) {
+      <button type="button"
+        class="border-2 px-3 py-2 rounded-md text-sm transition-colors flex-1 text-left"
+        [class.border-blue-400]="niveauChoisi() === $index"
+        [class.bg-blue-400]="niveauChoisi() === $index"
+        [class.text-white]="niveauChoisi() === $index"
+        [class.border-(--border-grey)]="niveauChoisi() !== $index"
+        [class.text-blue-100]="niveauChoisi() !== $index"
+        (click)="choisirNiveau($index)">
+        <span class="font-semibold block">{{ niveau.label }}</span>
+        <span class="text-xs opacity-70">{{ niveau.points }} pts</span>
+      </button>
+    }
+  </div>
+
+  <!-- Commentaire -->
+  <textarea
+    class="w-full border border-(--border-grey) rounded-md bg-(--input-bg) text-white text-sm px-2 py-1"
+    rows="2"
+    placeholder="Commentaire pour ce critère..."
+    [value]="commentaire()"
+    (input)="commentaire.set($any($event.target).value)"
+    (blur)="sauvegarder()">
+  </textarea>
+
+  @if (saving()) {
+    <p class="text-blue-400/70 text-xs mt-1">Sauvegarde...</p>
+  }
+
+</div>

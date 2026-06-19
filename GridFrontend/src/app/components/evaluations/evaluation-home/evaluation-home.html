@@ -1,7 +1,60 @@
-<p class="text-blue-100">Évaluation: {{evalResource.value()?.data?.titre}}</p>
-<p class="text-blue-100">Étudiants: {{evalResource.value()?.data?.etudiants?.length}}</p>
-<p class="text-blue-100">Critères: {{evalResource.value()?.data?.criteres?.length}}</p>
+<div class="text-center">
+    <h1 class="text-blue-100 text-4xl mt-3">{{evalResource.value()?.data?.titre}}</h1>
+</div>
 
-@for(critere of evalResource.value()?.data?.criteres ?? []; track critere.id) {
-    <p>{{critere.titre}}</p>
+<div class="w-2/3 mx-auto mt-3">
+    <div class="mt-5 flex justify-around">
+        <div class="border-b-2 border-r border-blue-100 flex-1 text-center text-lg py-3" [class.bg-(--form-bg)]="critereSelectionne()" (click)="tabSelect(true)">
+            <p class="text-blue-100">Critères ({{evalResource.value()?.data?.criteres?.length}})</p>
+        </div>
+        <div class="border-b-2 border-l border-blue-100 flex-1 text-center text-lg py-3" [class.bg-(--form-bg)]="!critereSelectionne()" (click)="tabSelect(false)">
+            <p class="text-blue-100">Corrections ({{evalResource.value()?.data?.etudiants?.length ?? 0}} étudiants)</p>
+        </div>
+    </div> 
+</div>
+
+@if (critereSelectionne()) {
+    <div class="w-2/3 mx-auto mt-3">
+        <div class="flex justify-end mt-3">
+                <button class="border-2 border-emerald-400 text-emerald-400 px-2 py-1 mx-1 rounded-md hover:bg-emerald-400/10 transition-colors" (click)="toggleFormCritere()">
+                    {{ afficherFormCritere() ? 'Annuler' : 'Ajouter un critère'}} 
+                </button>                
+            </div>
+            @if(afficherFormCritere()) {
+                <div class="mt-3">
+                    <app-evaluation-form [evaluationId]="evaluation_id()!!" [nbCritere]="evalResource.value()?.data?.criteres?.length ?? 0" [critere]="critereModif()"  (critereCree)="refreshEval()" ></app-evaluation-form>
+                </div>                
+            }
+
+            @if (evalResource.value()?.data?.criteres?.length == 0) {
+                <div class="text-center mt-5">
+                    <p class="text-blue-100 text-2xl">Aucun critère pour cette évaluation</p>
+                </div>
+            }
+            @else {
+                @for (critere of criteresTries(); track critere.id) {
+                    <app-carte-critere [critere]="critere" (critereModif)="afficherModifCritere($event)"></app-carte-critere>
+                }
+            }
+    </div>
+}
+
+@else {
+    <div class="w-4/5 mx-auto mt-3 flex">
+        <div class="w-1/5 border-r-2 border-gray-800 mt-3">
+            @for (etudiant of evalResource.value()?.data?.etudiants; track etudiant.no_etudiant) {
+                <div class="h-16 border-b-2 border-gray-800 flex items-center" [class.bg-(--form-bg)]="etudiantSelectionne == etudiant" (click)="selectionnerEtu(etudiant)">
+                    <p class="text-blue-100 ms-2">{{etudiant.nom}}, {{etudiant.prenom}}</p>
+                </div>
+            }
+        </div>
+        <div class="w-4/5">
+            <div class="m-3">
+                @if(etudiantSelectionne){
+                    <app-correction-etudiant [etudiant]="etudiantSelectionne" [criteres]="criteresTries()" />
+                }
+            </div>
+            
+        </div>
+    </div>
 }

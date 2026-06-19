@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+#[Fillable(['no_etudiant', 'critere_id', 'niveau_index', 'points_obtenus', 'commentaire'])]
 class Resultat extends Model
 {
     /** @use HasFactory<\Database\Factories\ResultatFactory> */

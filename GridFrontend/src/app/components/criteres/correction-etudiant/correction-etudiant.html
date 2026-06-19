@@ -1,0 +1,22 @@
+<div class="flex flex-col h-full">
+  
+  <!-- En-tête étudiant -->
+  <div class="flex justify-between items-center mb-4 pb-2 border-b border-(--border-grey)">
+    <p class="text-blue-100 font-semibold text-lg">
+      {{ etudiant().nom }}, {{ etudiant().prenom }}
+    </p>
+    <span class="text-violet-500">
+      {{ totalPoints() }} / {{ pointsMax() }} pts
+    </span>
+  </div>
+
+  <!-- Critères -->
+  @for (critere of criteres(); track critere.id) {
+    <app-correction-critere
+      [critere]="critere"
+      [etudiantId]="etudiant().no_etudiant"
+      [resultat]="resultatPourCritere(critere.id)"
+    />
+  }
+
+</div>

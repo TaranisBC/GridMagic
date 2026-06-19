@@ -1,0 +1,87 @@
+<form class="border-2 border-(--border-grey) p-4 rounded-md bg-(--form-bg)" 
+      [formGroup]="formCritere" (ngSubmit)="saveCritere($event)">
+
+  <!-- Titre et ordre -->
+  <div class="flex gap-4 my-2">
+    <div class="flex flex-col gap-1 flex-1">
+      <label class="text-blue-100 text-sm" for="titre">Titre du critère</label>
+      <input type="text" id="titre" formControlName="titre"
+        class="border-2 border-(--border-grey) rounded-md text-white px-2 py-1 bg-(--input-bg)" />
+    </div>
+    <div class="flex flex-col gap-1 w-24">
+      <label class="text-blue-100 text-sm" for="ordre">Ordre</label>
+      <input type="number" id="ordre" formControlName="ordre"
+        class="border-2 border-(--border-grey) rounded-md text-white px-2 py-1 bg-(--input-bg)" />
+    </div>
+  </div>
+
+  <!-- Description -->
+  <div class="flex flex-col gap-1 my-2">
+    <label class="text-blue-100 text-sm">Description</label>
+    <textarea formControlName="description" rows="2"
+      class="border-2 border-(--border-grey) rounded-md text-white px-2 py-1 bg-(--input-bg)">
+    </textarea>
+  </div>
+
+  <!-- Niveaux -->
+  <div class="my-4">
+    <div class="flex justify-between items-center mb-2">
+      <p class="text-violet-500 text-sm font-semibold">Niveaux de réussite</p>
+      <button type="button" (click)="ajouterNiveau()"
+        class="border-2 border-emerald-400 text-emerald-400 text-sm px-2 py-1 rounded-md 
+               hover:bg-emerald-400/10 transition-colors flex items-center gap-1">
+        <ng-icon name="heroPlus" size="14" />
+        Ajouter un niveau
+      </button>
+    </div>
+
+    <div formArrayName="niveaux" class="flex flex-col gap-3">
+      @for (niveau of niveaux.controls; track $index) {
+        <div [formGroupName]="$index" 
+             class="border border-(--border-grey) rounded-md p-3 flex gap-3 items-start">
+          
+          <div class="flex flex-col gap-1 flex-1">
+            <label class="text-blue-100/70 text-xs">Libellé</label>
+            <input type="text" formControlName="label"
+              placeholder="Ex: Excellent"
+              class="border-2 border-(--border-grey) rounded-md text-white px-2 py-1 bg-(--input-bg) text-sm" />
+          </div>
+
+          <div class="flex flex-col gap-1 w-24">
+            <label class="text-blue-100/70 text-xs">Points</label>
+            <input type="number" formControlName="points"
+              class="border-2 border-(--border-grey) rounded-md text-white px-2 py-1 bg-(--input-bg) text-sm" />
+          </div>
+
+          <div class="flex flex-col gap-1 flex-2">
+            <label class="text-blue-100/70 text-xs">Description du niveau</label>
+            <input type="text" formControlName="description"
+              placeholder="Ce qui est attendu à ce niveau..."
+              class="border-2 border-(--border-grey) rounded-md text-white px-2 py-1 bg-(--input-bg) text-sm" />
+          </div>
+
+          <button type="button" (click)="supprimerNiveau($index)"
+            [disabled]="niveaux.length === 1"
+            class="mt-5 border-2 border-red-400 text-red-400 p-1 rounded-md 
+                   hover:bg-red-400/10 transition-colors disabled:opacity-30">
+            <ng-icon name="heroTrash" size="14" />
+          </button>
+
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="flex justify-end mt-4">
+    <button type="submit"
+      class="border-2 text-white border-(--border-grey) rounded-md px-6 py-2 bg-(--button-bg)">
+      @if(critere()) {
+        Modifier le critère
+      }
+      @else {
+        Créer le critère
+      }
+    </button>
+  </div>
+
+</form>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCritereRequest;
 use App\Http\Requests\UpdateCritereRequest;
+use App\Http\Resources\CritereResource;
 use App\Models\Critere;
 
 class CritereController extends Controller
@@ -29,7 +30,8 @@ class CritereController extends Controller
      */
     public function store(StoreCritereRequest $request)
     {
-        //
+        $critere = Critere::create($request->all());
+        return new CritereResource($critere);
     }
 
     /**
@@ -53,7 +55,8 @@ class CritereController extends Controller
      */
     public function update(UpdateCritereRequest $request, Critere $critere)
     {
-        //
+        $critere->update($request->all());
+        return new CritereResource($critere);
     }
 
     /**
