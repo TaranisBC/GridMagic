@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\CorrectionGeneraleController;
 use App\Http\Controllers\CoursController;
 use App\Http\Controllers\CritereController;
 use App\Http\Controllers\EvaluationController;
+use App\Http\Controllers\PdfController;
 use App\Http\Controllers\ResultatController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -26,4 +28,13 @@ Route::apiResource('evaluation', EvaluationController::class);
 Route::apiResource('criteres', CritereController::class);
 Route::apiResource('resultats', ResultatController::class);
 Route::get('evaluations/{evaluation}/etudiants/{no_etudiant}/resultats', [ResultatController::class, 'resultatsEtuEval']);
+Route::get('evaluations/{evaluation}/etudiants/{no_etudiant}/commentaire', [ResultatController::class, 'commentaireEtuEval']);
 
+Route::post('commentaire-general',
+    [CorrectionGeneraleController::class, 'store']);
+
+Route::get('evaluations/{evaluation}/etudiants/{no_etudiant}/pdf',
+    [PdfController::class, 'genererPdf']);
+
+Route::get('evaluations/{evaluation}/pdf-zip',
+    [PdfController::class, 'genererTousPdf']);

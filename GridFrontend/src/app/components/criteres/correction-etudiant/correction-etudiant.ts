@@ -1,12 +1,17 @@
-import { Component, computed, effect, input, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { Critere } from '../../../models/critere';
 import { Etudiant } from '../../../models/etudiant';
 import { Resultat } from '../../../models/resultat';
 import { CorrectionCritere } from "../correction-critere/correction-critere";
+import { CommentaireService } from '../../../services/commentaire-service';
+import { heroArrowDownTray, heroArrowPath } from '@ng-icons/heroicons/outline'
+import { provideIcons, NgIcon } from '@ng-icons/core';
+import { EvaluationService } from '../../../services/evaluation-service';
 
 @Component({
   selector: 'app-correction-etudiant',
-  imports: [CorrectionCritere],
+  imports: [CorrectionCritere, NgIcon],
+  providers: [provideIcons({ heroArrowDownTray, heroArrowPath })],
   templateUrl: './correction-etudiant.html',
   styleUrl: './correction-etudiant.css',
 })
@@ -15,6 +20,24 @@ export class CorrectionEtudiant {
   etudiant   = input.required<Etudiant>()
   criteres   = input.required<Critere[]>()
   resultats  = input<Resultat[]>([])
+  private evalId = computed(() => this.criteres()[0]?.evaluation_id ?? 0)
+  private noEtudiant = computed(() => this.etudiant().no_etudiant)
+  private commentaireService = inject(CommentaireService)
+
+  private evalService    = inject(EvaluationService)
+  telechargerPdfLoading  = signal(false)
+
+  // Méthode
+telechargerPdf() {
+  this.telechargerPdfLoading.set(true)
+  const nom = `${this.etudiant().no_etudiant}_${this.etudiant().nom}_${this.criteres()[0]?.evaluation_id}.pdf`
+  
+  this.evalService.telechargerPdf(
+    this.criteres()[0]?.evaluation_id,
+    this.etudiant().no_etudiant,
+    nom
+  ).add(() => this.telechargerPdfLoading.set(false))
+}
 
   // Retrouver le résultat existant pour un critère
   resultatPourCritere(critereId: number): Resultat | null {
@@ -24,10 +47,23 @@ export class CorrectionEtudiant {
   // Copie locale mutable
   resultatsLocaux = signal<Resultat[]>([])
 
+  correctionGeneraleResource = this.commentaireService.getCommentaireGeneral(
+    this.evalId,
+    this.noEtudiant
+  )
+  commentaireGeneral  = signal<string>('')
+  savingGeneral       = signal<boolean>(false)
+
   constructor() {
     // Synchroniser avec l'input quand il change
     effect(() => {
       this.resultatsLocaux.set(this.resultats())
+    })
+
+    // Synchroniser le commentaire général quand la resource charge
+    effect(() => {
+      const cg = this.correctionGeneraleResource.value()?.data
+      this.commentaireGeneral.set(cg?.commentaire ?? '')
     })
   }
 
@@ -58,4 +94,21 @@ export class CorrectionEtudiant {
     if (this.pointsMax() === 0) return 0
     return Math.round((this.totalPoints() / this.pointsMax()) * 100)
   })
+
+  sauvegarderCommentaireGeneral() {
+    if (!this.commentaireGeneral().trim()) return
+    this.savingGeneral.set(true)
+
+    this.commentaireService.sauvegarder({
+      no_etudiant:         this.noEtudiant(),
+      evaluation_id:       this.evalId(),
+      commentaire: this.commentaireGeneral(),
+    }).subscribe({
+      next: () => this.savingGeneral.set(false),
+      error: (err) => {
+        this.savingGeneral.set(false)
+        console.error(err)
+      }
+    })
+  }
 }

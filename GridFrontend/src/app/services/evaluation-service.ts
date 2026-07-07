@@ -29,4 +29,32 @@ export class EvaluationService {
       () => id() ? `${this.url}/evaluation/${id()}` : undefined
     );
   }
+
+  telechargerPdf(evaluationId: number, noEtudiant: string, nomFichier: string) {
+    return this.httpClient.get(
+      `${this.url}/evaluations/${evaluationId}/etudiants/${noEtudiant}/pdf`,
+      { responseType: 'blob' }
+    ).subscribe(blob => {
+      const url = URL.createObjectURL(blob)
+      const a   = document.createElement('a')
+      a.href     = url
+      a.download = nomFichier
+      a.click()
+      URL.revokeObjectURL(url)
+    })
+  }
+
+  telechargerTousPdf(evaluationId: number, nomFichier: string) {
+    return this.httpClient.get(
+      `${this.url}/evaluations/${evaluationId}/pdf-zip`,
+      { responseType: 'blob' }
+    ).subscribe(blob => {
+      const url = URL.createObjectURL(blob)
+      const a   = document.createElement('a')
+      a.href     = url
+      a.download = nomFichier
+      a.click()
+      URL.revokeObjectURL(url)
+    })
+  }
 }

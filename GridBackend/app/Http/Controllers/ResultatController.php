@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreResultatRequest;
 use App\Http\Requests\UpdateResultatRequest;
+use App\Http\Resources\CorrectionGeneraleResource;
 use App\Http\Resources\ResultatResource;
+use App\Models\CorrectionGenerale;
 use App\Models\Critere;
 use App\Models\Evaluation;
 use App\Models\Resultat;
 use Illuminate\Http\Request;
-use LDAP\Result;
 
 class ResultatController extends Controller
 {
@@ -91,5 +92,17 @@ class ResultatController extends Controller
             ->get();
 
         return ResultatResource::collection($resultats);
+    }
+
+    public function commentaireEtuEval(Evaluation $evaluation, string $no_etudiant) {
+        $correction = CorrectionGenerale::where('evaluation_id', $evaluation->id)
+            ->where('no_etudiant', $no_etudiant)
+            ->first();
+
+        if (!$correction) {
+            return response()->json(['data' => null]);
+        }
+
+        return new CorrectionGeneraleResource($correction);
     }
 }

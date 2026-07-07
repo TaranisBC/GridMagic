@@ -11,6 +11,20 @@
     [class.text-blue-100]="pourcentage() === null">
       {{ totalPoints() }} / {{ pointsMax() }} pts ({{pourcentage()}}%)
     </span>
+
+     <button
+      class="border-2 border-(--border-grey) text-blue-100 text-sm px-3 py-1 rounded-md 
+             hover:bg-white/10 transition-colors flex items-center gap-1"
+      [disabled]="telechargerPdfLoading()"
+      (click)="telechargerPdf()">
+      @if (telechargerPdfLoading()) {
+        <ng-icon name="heroArrowPath" size="14" class="animate-spin" />
+        Génération...
+      } @else {
+        <ng-icon name="heroArrowDownTray" size="14" />
+        PDF
+      }
+    </button>
   </div>
 
   <!-- Critères -->
@@ -22,5 +36,23 @@
       (resultatsaved)="updateResultat($event)"
     />
   }
+
+  <!-- Commentaire général -->
+<div class="border border-(--border-grey) rounded-lg p-4 mt-3">
+  <div class="flex justify-between items-center mb-2">
+    <p class="text-blue-100 font-semibold">Commentaire général</p>
+    @if (savingGeneral()) {
+      <span class="text-blue-400/70 text-xs">Sauvegarde...</span>
+    }
+  </div>
+  <textarea
+    class="w-full border border-(--border-grey) rounded-md bg-(--input-bg) text-white text-sm px-2 py-1"
+    rows="4"
+    placeholder="Commentaire général sur la correction de cet étudiant..."
+    [value]="commentaireGeneral()"
+    (input)="commentaireGeneral.set($any($event.target).value)"
+    (blur)="sauvegarderCommentaireGeneral()">
+  </textarea>
+</div>
 
 </div>

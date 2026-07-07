@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCorrectionGeneraleRequest;
 use App\Http\Requests\UpdateCorrectionGeneraleRequest;
+use App\Http\Resources\CorrectionGeneraleResource;
 use App\Models\CorrectionGenerale;
 
 class CorrectionGeneraleController extends Controller
@@ -29,7 +30,17 @@ class CorrectionGeneraleController extends Controller
      */
     public function store(StoreCorrectionGeneraleRequest $request)
     {
-        //
+        $correction = CorrectionGenerale::updateOrCreate(
+            [
+                'evaluation_id' => $request->evaluation_id,
+                'no_etudiant'   => $request->no_etudiant,
+            ],
+            [
+                'commentaire_general' => $request->commentaire,
+            ]
+        );
+
+        return new CorrectionGeneraleResource($correction);
     }
 
     /**

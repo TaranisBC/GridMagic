@@ -12,7 +12,7 @@ class StoreCorrectionGeneraleRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,7 +23,9 @@ class StoreCorrectionGeneraleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'evaluation_id'       => 'required|exists:evaluations,id',
+            'no_etudiant'         => 'required|exists:etudiants,no_etudiant',
+            'commentaire' => 'required|string',
         ];
     }
 }

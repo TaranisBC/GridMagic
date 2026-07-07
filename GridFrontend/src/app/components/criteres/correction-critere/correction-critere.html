@@ -29,6 +29,7 @@
         [class.text-blue-100]="niveauChoisi() !== $index"
         (click)="choisirNiveau($index)">
         <span class="font-semibold block">{{ niveau.label }}</span>
+        <span class="block">{{ niveau.description }}</span>
         <span class="text-xs opacity-70">{{ niveau.points }} pts</span>
       </button>
     }
