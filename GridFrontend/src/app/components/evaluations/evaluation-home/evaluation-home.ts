@@ -9,10 +9,13 @@ import { CorrectionEtudiant } from "../../criteres/correction-etudiant/correctio
 import { Etudiant } from '../../../models/etudiant';
 import { ResultatService } from '../../../services/resultat-service';
 import { Resultat } from '../../../models/resultat';
+import { heroArrowDownTray, heroArrowPath } from '@ng-icons/heroicons/outline'
+import { provideIcons, NgIcon } from '@ng-icons/core';
 
 @Component({
   selector: 'app-evaluation-home',
-  imports: [EvaluationForm, CarteCritere, CorrectionEtudiant],
+  imports: [EvaluationForm, CarteCritere, CorrectionEtudiant, NgIcon],
+  providers: [provideIcons({ heroArrowDownTray, heroArrowPath })],
   templateUrl: './evaluation-home.html',
   styleUrl: './evaluation-home.css',
 })
@@ -73,6 +76,10 @@ export class EvaluationHome {
   afficherModifCritere(critere: Critere) {
     this.critereModif.set(critere)
     this.afficherFormCritere.set(true)
+  }
+
+  getAllPdf() {
+    this.evalService.telechargerTousPdf(this.evalId(), `evaluation_${this.evalResource.value()?.data?.titre ?? 'evaluation'}.zip`)
   }
   
 }

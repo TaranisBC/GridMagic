@@ -1,6 +1,5 @@
 import { Critere } from "./critere";
 import { Etudiant } from "./etudiant";
-import { Niveau } from "./niveau";
 
 export interface EvalComplete {
     id: number,
