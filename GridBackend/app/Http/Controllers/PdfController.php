@@ -54,7 +54,7 @@ class PdfController extends Controller
     public function genererTousPdf(Evaluation $evaluation)
     {
         try {
-        
+
         $evaluation->load('cours.etudiants', 'criteres');
         $criteres = $evaluation->criteres()->orderBy('ordre')->get();
 
@@ -99,11 +99,11 @@ class PdfController extends Controller
         $nomZip = "{$this->nomSafe($evaluation->titre)}_corrections.zip";
 
         return response()->download($zipPath, $nomZip)->deleteFileAfterSend();
-    
+
         } catch (\Exception $e) {
             \Log::error('Erreur genererTousPdf: ' . $e->getMessage());
             \Log::error($e->getTraceAsString());
-            
+
             return response()->json([
                 'error'   => $e->getMessage(),
                 'fichier' => $e->getFile(),
