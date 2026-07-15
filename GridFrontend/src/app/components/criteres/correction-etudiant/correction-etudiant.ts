@@ -30,7 +30,7 @@ export class CorrectionEtudiant {
   // Méthode
 telechargerPdf() {
   this.telechargerPdfLoading.set(true)
-  const nom = `${this.etudiant().no_etudiant}_${this.etudiant().nom}_${this.criteres()[0]?.evaluation_id}.pdf`
+  const nom = `${this.etudiant().no_etudiant}_${this.etudiant().nom}_${this.etudiant().prenom}.pdf`
   
   this.evalService.telechargerPdf(
     this.criteres()[0]?.evaluation_id,

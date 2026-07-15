@@ -5,7 +5,7 @@
   <style>
     @page { margin: 15mm 12mm; }
 
-    
+
 
     body {
       font-family: "DejaVu Sans", Arial, sans-serif;
@@ -148,7 +148,6 @@
         <table class="entete-table">
           <tr>
             <td style="vertical-align:top;">
-              <div class="app-name">Grid Magic</div>
               <div class="eval-titre">{{ $evaluation->titre }}</div>
               <div class="eval-meta">
                 {{ $evaluation->cours->code }} — {{ $evaluation->cours->titre }}
@@ -159,7 +158,7 @@
             </td>
             <td style="vertical-align:top; text-align:right;">
               <div class="etudiant-nom">{{ $etudiant->nom }}, {{ $etudiant->prenom }}</div>
-              <div class="etudiant-no">N° {{ $etudiant->no_etudiant }}</div>
+              <div class="etudiant-no">No Étudiant {{ $etudiant->no_etudiant }}</div>
               @php
                 $pct = $pointsMax > 0 ? round(($totalPoints / $pointsMax) * 100, 1) : 0;
               @endphp
@@ -201,6 +200,7 @@
                 </td>
               </tr>
             </table>
+              <p>{{ $critere->description }}</p>
           </div>
 
           <table class="niveaux-table">
@@ -261,7 +261,7 @@
       </div>
 
 <div class="pied">
-        Généré par Grid Magic — {{ now()->format('d/m/Y à H:i') }}
+        {{ now()->format('d/m/Y à H:i') }}
       </div>
 
 </body>

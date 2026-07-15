@@ -43,12 +43,12 @@ class PdfController extends Controller
             'pointsMax'   => $pointsMax,
         ])->setPaper('a4');
 
-        $nomFichier = "{$no_etudiant}_{$this->nomSafe($etudiant->nom)}_{$this->nomSafe($evaluation->titre)}.pdf";
+        $nomFichier = "{$etudiant->no_etudiant}_{$this->nomSafe($etudiant->nom)}_{$this->nomSafe($etudiant->prenom)}.pdf";
 
         return $pdf->download($nomFichier);
     }
 
-    /**
+    /**épée
      * Génère un ZIP contenant les PDFs de tous les étudiants.
      */
     public function genererTousPdf(Evaluation $evaluation)
